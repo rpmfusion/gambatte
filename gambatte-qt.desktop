@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Gambatte Qt
+GenericName=Game Boy / Game Boy Color emulator
+Comment=An accuracy-focused Game Boy / Game Boy Color emulator
+Exec=gambatte_qt
+Icon=gambatte-qt
+Terminal=false
+Type=Application
+Categories=Game;Emulator;
+

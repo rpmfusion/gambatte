@@ -1,0 +1,11 @@
+--- gambatte_src-0.4.0/gambatte_qt/src/framework/framework.pro.orig	2008-10-28 00:03:48.000000000 +0100
++++ gambatte_src-0.4.0/gambatte_qt/src/framework/framework.pro	2008-12-02 15:25:16.000000000 +0100
+@@ -109,7 +109,7 @@
+         -lXrandr #\
+ #        -lXxf86vm \
+ #        -lXinerama
+-    linux-g++ { 
++    linux-g++|linux-g++-64 { 
+         SOURCES += framework/addaudioengines_linux.cpp \
+             framework/audioengines/alsaengine.cpp \
+             framework/SDL_Joystick/src/linux/SDL_sysjoystick.c

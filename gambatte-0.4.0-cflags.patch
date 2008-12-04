@@ -1,0 +1,33 @@
+diff -dur gambatte_src-0.4.0.orig/gambatte_qt/src/framework/framework.pro gambatte_src-0.4.0/gambatte_qt/src/framework/framework.pro
+--- gambatte_src-0.4.0.orig/gambatte_qt/src/framework/framework.pro	2008-10-28 00:03:48.000000000 +0100
++++ gambatte_src-0.4.0/gambatte_qt/src/framework/framework.pro	2008-11-15 17:35:50.000000000 +0100
+@@ -68,7 +68,6 @@
+ INCLUDEPATH += framework/SDL_Joystick/include
+ INCLUDEPATH += $$COMMONPATH
+ DEFINES += HAVE_STDINT_H
+-QMAKE_CXXFLAGS += -fno-exceptions -fno-rtti
+ 
+ macx { 
+     HEADERS += $$COMMONPATH/ringbuffer.h
+diff -dur gambatte_src-0.4.0.orig/gambatte_sdl/SConstruct gambatte_src-0.4.0/gambatte_sdl/SConstruct
+--- gambatte_src-0.4.0.orig/gambatte_sdl/SConstruct	2008-10-28 00:03:47.000000000 +0100
++++ gambatte_src-0.4.0/gambatte_sdl/SConstruct	2008-11-15 17:20:15.000000000 +0100
+@@ -1,5 +1,5 @@
+-global_cflags = ARGUMENTS.get('CFLAGS', '-Wall -Wextra -O2 -fomit-frame-pointer')
+-global_cxxflags = ARGUMENTS.get('CXXFLAGS', global_cflags + ' -fno-exceptions -fno-rtti')
++global_cflags = ARGUMENTS.get('CFLAGS')
++global_cxxflags = ARGUMENTS.get('CXXFLAGS')
+ global_defines = ' -DHAVE_STDINT_H'
+ 
+ env = Environment(CPPPATH = ['src', '../libgambatte/include', '../common'],
+diff -dur gambatte_src-0.4.0.orig/libgambatte/SConstruct gambatte_src-0.4.0/libgambatte/SConstruct
+--- gambatte_src-0.4.0.orig/libgambatte/SConstruct	2008-10-28 00:03:48.000000000 +0100
++++ gambatte_src-0.4.0/libgambatte/SConstruct	2008-11-15 16:35:08.000000000 +0100
+@@ -1,5 +1,5 @@
+-global_cflags = ARGUMENTS.get('CFLAGS', '-Wall -Wextra -O2 -fomit-frame-pointer')
+-global_cxxflags = ARGUMENTS.get('CXXFLAGS', global_cflags + ' -fno-exceptions -fno-rtti')
++global_cflags = ARGUMENTS.get('CFLAGS')
++global_cxxflags = ARGUMENTS.get('CXXFLAGS')
+ global_defines = ' -DHAVE_STDINT_H -DCHAR_WIDTH_8'
+ 
+ env = Environment(CPPPATH = ['src', 'include', '../common'],
