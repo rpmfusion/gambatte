@@ -1,9 +1,10 @@
-%define libname lib%{name}.so
-%define soname %{libname}.0
+%define libname_u %{name}
+%define libname %{name}-%{version}
+%define soname lib%{libname}.so
 
 Name: gambatte
-Version: 0.4.0
-Release: 4%{?dist}
+Version: 0.4.1
+Release: 1%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 Group: Applications/Emulators
@@ -11,18 +12,17 @@ License: GPLv2
 URL: http://sourceforge.net/projects/gambatte/
 Source0: http://dl.sf.net/sourceforge/%{name}/%{name}_src-%{version}.tar.gz
 Source1: gambatte-qt.desktop
+# Icon made by Peter Verschoor
 Source2: gameboy_icon.png
 # Andrea Musuruane
-Patch0: %{name}-0.4.0-cflags.patch
+Patch0: %{name}-0.4.1-cflags.patch
 Patch1: %{name}-0.4.0-usesystemlibraries.patch 
-# Patch submitted upstream SF #2377772
-Patch2: %{name}-0.4.0-alsa.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: scons
 BuildRequires: minizip-devel
 BuildRequires: SDL-devel
-BuildRequires: qt-devel >= 4
+BuildRequires: qt4-devel
 BuildRequires: libXv-devel
 BuildRequires: desktop-file-utils
 BuildRequires:  ImageMagick
@@ -31,7 +31,7 @@ Requires: hicolor-icon-theme
 
 %description
 Gambatte is an accuracy-focused, open-source, cross-platform
-Game Boy / Game Boy Color emulator written in C++. It is based on hundreds of
+Game Boy Color emulator written in C++. It is based on hundreds of
 corner case hardware tests, as well as previous documentation and reverse
 engineering efforts.
 
@@ -42,7 +42,7 @@ Group: System Environment/Libraries
 
 %description -n libgambatte
 Gambatte is an accuracy-focused, open-source, cross-platform
-Game Boy / Game Boy Color emulator written in C++. It is based on hundreds of
+Game Boy Color emulator written in C++. It is based on hundreds of
 corner case hardware tests, as well as previous documentation and reverse
 engineering efforts.
 
@@ -65,7 +65,7 @@ Group: Applications/Emulators
 
 %description qt
 Gambatte is an accuracy-focused, open-source, cross-platform
-Game Boy / Game Boy Color emulator written in C++. It is based on hundreds of
+Game Boy Color emulator written in C++. It is based on hundreds of
 corner case hardware tests, as well as previous documentation and reverse
 engineering efforts.
 
@@ -78,7 +78,7 @@ Group: Applications/Emulators
 
 %description sdl
 Gambatte is an accuracy-focused, open-source, cross-platform
-Game Boy / Game Boy Color emulator written in C++. It is based on hundreds of
+Game Boy Color emulator written in C++. It is based on hundreds of
 corner case hardware tests, as well as previous documentation and reverse
 engineering efforts.
 
@@ -89,7 +89,6 @@ This is a simple command-line SDL front-end.
 %setup -q -n %{name}_src-%{version}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 # Fix file encoding
 for txtfile in README \
@@ -106,6 +105,11 @@ sed -i '/^env.Library/i\
 env.AppendUnique(SHLINKFLAGS="-Wl,-soname=%{soname}")' libgambatte/SConstruct
 sed -i 's/env.Library/env.SharedLibrary/' libgambatte/SConstruct
 
+# Change library name to avoid future collisions with upstream
+sed -i "s/'%{libname_u}'/'%{libname}'/" libgambatte/SConstruct
+sed -i 's/-l%{libname_u}/-l%{libname}/' gambatte_qt/src/src.pro
+sed -i "s/'%{libname_u}'/'%{libname}'/" gambatte_sdl/SConstruct
+
 
 %build
 export QMAKE_CFLAGS="%{optflags}"
@@ -113,10 +117,6 @@ export QMAKE_CXXFLAGS="%{optflags}"
 
 pushd libgambatte
 scons %{?_smp_mflags} CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
-# Make symlinks now as they are needed
-mv %{libname} %{soname}
-ln -s %{soname} %{libname}.%{version}
-ln -s %{soname} %{libname}
 popd
 
 pushd gambatte_sdl
@@ -136,11 +136,9 @@ rm -rf %{buildroot}
 install -d -m 755 %{buildroot}%{_includedir}/%{name}
 install -m 644  libgambatte/include/* %{buildroot}%{_includedir}/%{name}
 
-# Install lib and symlinks
+# Install lib
 install -d -m 755 %{buildroot}%{_libdir}
 install -m 755 libgambatte/%{soname} %{buildroot}%{_libdir}
-mv libgambatte/%{libname}.%{version} %{buildroot}%{_libdir}
-mv libgambatte/%{libname} %{buildroot}%{_libdir}
 
 # Install bin files
 install -d -m 755 %{buildroot}%{_bindir}
@@ -190,14 +188,12 @@ rm -rf %{buildroot}
 
 %files -n libgambatte
 %defattr(-,root,root,-)
-%{_libdir}/%{libname}.%{version}
 %{_libdir}/%{soname}
 %doc changelog COPYING README
 
 
 %files -n libgambatte-devel
 %defattr(-,root,root,-)
-%{_libdir}/%{libname}
 %{_includedir}/%{name}
 %doc changelog COPYING README
 
@@ -220,6 +216,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 31 2009 Andrea Musuruane <musuruan@gmail.com> - 0.4.1-1
+- Updated to upstream 0.4.1
+- Changed back to qt4-devel from qt-devel in BR
+- Changed descriptions to match the one upstream uses
+- Dropped alsa patch, applied upstream
+- Changed libname to avoid future collisions with upstream
+
 * Tue Dec 02 2008 Andrea Musuruane <musuruan@gmail.com> - 0.4.0-4
 - Changed qt4-devel to qt-devel in BR
 - Added a patch to compile alsa under linux 64bit systems
