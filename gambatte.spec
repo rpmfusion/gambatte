@@ -4,7 +4,7 @@
 
 Name: gambatte
 Version: 0.4.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 Group: Applications/Emulators
@@ -16,7 +16,9 @@ Source1: gambatte-qt.desktop
 Source2: gameboy_icon.png
 # Andrea Musuruane
 Patch0: %{name}-0.4.1-cflags.patch
-Patch1: %{name}-0.4.0-usesystemlibraries.patch 
+Patch1: %{name}-0.4.0-usesystemlibraries.patch
+# https://sourceforge.net/tracker/?func=detail&aid=2731060&group_id=203791&atid=987012
+Patch2: %{name}-0.4.1-gcc44.patch 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: scons
@@ -89,6 +91,7 @@ This is a simple command-line SDL front-end.
 %setup -q -n %{name}_src-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # Fix file encoding
 for txtfile in README \
@@ -216,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr 04 2009 Andrea Musuruane <musuruan@gmail.com> - 0.4.1-3
+- Added a patch to fix gcc 4.4 errors
+
 * Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 0.4.1-2
 - rebuild for new F11 features
 
