@@ -4,13 +4,13 @@
 
 Name: gambatte
 Version: 0.4.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 Group: Applications/Emulators
 License: GPLv2
 URL: http://sourceforge.net/projects/gambatte/
-Source0: http://dl.sf.net/sourceforge/%{name}/%{name}_src-%{version}.tar.gz
+Source0: http://downloads.sourceforge.net/%{name}/%{name}_src-%{version}.tar.gz
 Source1: gambatte-qt.desktop
 # Icon made by Peter Verschoor
 Source2: gameboy_icon.png
@@ -19,6 +19,8 @@ Patch0: %{name}-0.4.1-cflags.patch
 Patch1: %{name}-0.4.0-usesystemlibraries.patch
 # https://sourceforge.net/tracker/?func=detail&aid=2731060&group_id=203791&atid=987012
 Patch2: %{name}-0.4.1-gcc44.patch 
+# Upstream SVN
+Patch3: %{name}-0.4.1-libraries.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: scons
@@ -92,6 +94,7 @@ This is a simple command-line SDL front-end.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 # Fix file encoding
 for txtfile in README \
@@ -219,6 +222,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 17 2012 Andrea Musuruane <musuruan@gmail.com> - 0.4.1-6
+- Added a patch to link against libX11
+- Fixed Source0 URL
+
 * Fri Mar 02 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.4.1-5
 - Rebuilt for c++ ABI breakage
 
