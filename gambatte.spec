@@ -4,7 +4,7 @@
 
 Name: gambatte
 Version: 0.4.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 Group: Applications/Emulators
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.4.1-7
+- Mass rebuilt for Fedora 19 Features
+
 * Sat Mar 17 2012 Andrea Musuruane <musuruan@gmail.com> - 0.4.1-6
 - Added a patch to link against libX11
 - Fixed Source0 URL
