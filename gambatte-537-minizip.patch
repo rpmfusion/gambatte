@@ -1,0 +1,26 @@
+diff -durN gambatte_src-r537.orig/libgambatte/SConstruct gambatte_src-r537/libgambatte/SConstruct
+--- gambatte_src-r537.orig/libgambatte/SConstruct	2013-06-01 16:43:58.000000000 +0200
++++ gambatte_src-r537/libgambatte/SConstruct	2013-07-01 14:39:15.599514127 +0200
+@@ -44,9 +44,7 @@
+ 
+ conf = env.Configure()
+ 
+-if conf.CheckHeader('zlib.h'):
+-	sourceFiles.append('src/file/unzip/unzip.c')
+-	sourceFiles.append('src/file/unzip/ioapi.c')
++if conf.CheckLib('z', autoadd=1) and conf.CheckLib('minizip', autoadd=1):
+ 	sourceFiles.append('src/file/file_zip.cpp')
+ else:
+ 	sourceFiles.append('src/file/file.cpp')
+diff -durN gambatte_src-r537.orig/libgambatte/src/file/file_zip.cpp gambatte_src-r537/libgambatte/src/file/file_zip.cpp
+--- gambatte_src-r537.orig/libgambatte/src/file/file_zip.cpp	2013-06-01 16:43:58.000000000 +0200
++++ gambatte_src-r537/libgambatte/src/file/file_zip.cpp	2013-07-01 14:39:57.325515266 +0200
+@@ -24,7 +24,7 @@
+ #include <cstring>
+ 
+ namespace zlib {
+-#include "unzip/unzip.h"
++#include <minizip/unzip.h>
+ }
+ 
+ namespace {
