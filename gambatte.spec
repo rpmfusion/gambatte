@@ -3,25 +3,19 @@
 %define soname lib%{libname}.so
 
 Name: gambatte
-Version: 0.4.1
-Release: 6%{?dist}
+Version: 537
+Release: 1%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
-Group: Applications/Emulators
 License: GPLv2
 URL: http://sourceforge.net/projects/gambatte/
-Source0: http://downloads.sourceforge.net/%{name}/%{name}_src-%{version}.tar.gz
+Source0: http://downloads.sourceforge.net/%{name}/%{name}_src-r%{version}.tar.gz
 Source1: gambatte-qt.desktop
 # Icon made by Peter Verschoor
 Source2: gameboy_icon.png
 # Andrea Musuruane
-Patch0: %{name}-0.4.1-cflags.patch
-Patch1: %{name}-0.4.0-usesystemlibraries.patch
-# https://sourceforge.net/tracker/?func=detail&aid=2731060&group_id=203791&atid=987012
-Patch2: %{name}-0.4.1-gcc44.patch 
-# Upstream SVN
-Patch3: %{name}-0.4.1-libraries.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Use system minizip
+Patch0: %{name}-537-minizip.patch
 
 BuildRequires: scons
 BuildRequires: minizip-devel
@@ -29,7 +23,7 @@ BuildRequires: SDL-devel
 BuildRequires: qt4-devel
 BuildRequires: libXv-devel
 BuildRequires: desktop-file-utils
-BuildRequires:  ImageMagick
+BuildRequires: ImageMagick
 Requires: hicolor-icon-theme
 
 
@@ -90,21 +84,23 @@ This is a simple command-line SDL front-end.
 
 
 %prep
-%setup -q -n %{name}_src-%{version}
+%setup -q -n %{name}_src-r%{version}
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 # Fix file encoding
-for txtfile in README \
-    gambatte_qt/man/gambatte_qt.6 \
-    gambatte_sdl/man/gambatte_sdl.6; 
+for txtfile in README
 do
     iconv --from=ISO-8859-1 --to=UTF-8 $txtfile > tmp
     touch -r $txtfile tmp
     mv tmp $txtfile
 done
+
+# Fix premissions
+find . \( -name *.cpp -o -name *.h \) -exec chmod 644 {} \;
+
+# Use RPM_OPT_FLAGS
+sed -i '/QMAKE_CFLAGS/d' gambatte_qt/src/src.pro
+sed -i '/QMAKE_CXXFLAGS/d' gambatte_qt/src/src.pro
 
 # Build a dynamic library
 sed -i '/^env.Library/i\
@@ -114,7 +110,7 @@ sed -i 's/env.Library/env.SharedLibrary/' libgambatte/SConstruct
 # Change library name to avoid future collisions with upstream
 sed -i "s/'%{libname_u}'/'%{libname}'/" libgambatte/SConstruct
 sed -i 's/-l%{libname_u}/-l%{libname}/' gambatte_qt/src/src.pro
-sed -i "s/'%{libname_u}'/'%{libname}'/" gambatte_sdl/SConstruct
+sed -i "s/libgambatte.a/%{soname}/" gambatte_sdl/SConstruct
 
 
 %build
@@ -130,7 +126,7 @@ scons %{?_smp_mflags} CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
 popd
 
 pushd gambatte_qt
-qmake-qt4
+qmake-qt4 
 make %{?_smp_mflags}
 popd
 
@@ -150,11 +146,6 @@ install -m 755 libgambatte/%{soname} %{buildroot}%{_libdir}
 install -d -m 755 %{buildroot}%{_bindir}
 install -m 755 gambatte_sdl/gambatte_sdl %{buildroot}%{_bindir}
 install -m 755 gambatte_qt/bin/gambatte_qt %{buildroot}%{_bindir}
-
-# Install man files
-install -d -m 755 %{buildroot}%{_mandir}/man6
-install -m 644 gambatte_sdl/man/gambatte_sdl.6 %{buildroot}%{_mandir}/man6
-install -m 644 gambatte_qt/man/gambatte_qt.6 %{buildroot}%{_mandir}/man6
 
 # install desktop file
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -188,33 +179,23 @@ fi
 
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files -n libgambatte
-%defattr(-,root,root,-)
 %{_libdir}/%{soname}
 %doc changelog COPYING README
 
 
 %files -n libgambatte-devel
-%defattr(-,root,root,-)
 %{_includedir}/%{name}
 %doc changelog COPYING README
 
 
 %files sdl
-%defattr(-,root,root,-)
 %{_bindir}/gambatte_sdl
-%{_mandir}/man6/gambatte_sdl.6*
 %doc changelog COPYING README
 
 
 %files qt
-%defattr(-,root,root,-)
 %{_bindir}/gambatte_qt 
-%{_mandir}/man6/gambatte_qt.6*
 %{_datadir}/icons/hicolor/32x32/apps/gambatte-qt.png
 %{_datadir}/icons/hicolor/64x64/apps/gambatte-qt.png
 %{_datadir}/applications/gambatte-qt.desktop
@@ -222,6 +203,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 01 2013 Andrea Musuruane <musuruan@gmail.com> - 537-1
+- Updated to upstream r537
+- Dropped obsolete Group, Buildroot, %%clean and %%defattr
+
+* Sun Mar 03 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.4.1-7
+- Mass rebuilt for Fedora 19 Features
+
 * Sat Mar 17 2012 Andrea Musuruane <musuruan@gmail.com> - 0.4.1-6
 - Added a patch to link against libX11
 - Fixed Source0 URL
