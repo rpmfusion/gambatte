@@ -3,7 +3,7 @@
 %define soname lib%{libname}.so
 
 Name: gambatte
-Version: 537
+Version: 550
 Release: 1%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
@@ -132,8 +132,6 @@ popd
 
 
 %install
-rm -rf %{buildroot}
-
 # Install include
 install -d -m 755 %{buildroot}%{_includedir}/%{name}
 install -m 644  libgambatte/include/* %{buildroot}%{_includedir}/%{name}
@@ -203,6 +201,10 @@ fi
 
 
 %changelog
+* Fri Dec 20 2013 Andrea Musuruane <musuruan@gmail.com> - 550-1
+- Updated to upstream r550
+- Dropped cleaning at the beginning of %%install
+
 * Mon Jul 01 2013 Andrea Musuruane <musuruan@gmail.com> - 537-1
 - Updated to upstream r537
 - Dropped obsolete Group, Buildroot, %%clean and %%defattr
