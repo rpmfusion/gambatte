@@ -4,7 +4,7 @@
 
 Name: gambatte
 Version: 550
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 License: GPLv2
@@ -201,6 +201,9 @@ fi
 
 
 %changelog
+* Thu Sep 11 2014 Sérgio Basto <sergio@serjux.com> - 550-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Fri Dec 20 2013 Andrea Musuruane <musuruan@gmail.com> - 550-1
 - Updated to upstream r550
 - Dropped cleaning at the beginning of %%install
