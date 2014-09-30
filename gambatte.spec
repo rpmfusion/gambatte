@@ -3,7 +3,7 @@
 %define soname lib%{libname}.so
 
 Name: gambatte
-Version: 550
+Version: 571
 Release: 1%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
@@ -36,7 +36,6 @@ engineering efforts.
 
 %package -n libgambatte
 Summary: Core emulation code for Gambatte emulator
-Group: System Environment/Libraries
 
 %description -n libgambatte
 Gambatte is an accuracy-focused, open-source, cross-platform
@@ -50,7 +49,6 @@ The core emulation code is contained in a separate library back-end
 
 %package -n libgambatte-devel
 Summary: Development files for libgambatte
-Group: Development/Libraries
 Requires: libgambatte = %{version}-%{release}
 
 %description -n libgambatte-devel
@@ -59,7 +57,6 @@ This package contains development files for libgambatte.
 
 %package qt
 Summary: Qt4 Gambatte front-end
-Group: Applications/Emulators
 
 %description qt
 Gambatte is an accuracy-focused, open-source, cross-platform
@@ -72,7 +69,6 @@ This is the GUI front-end using Trolltech's Qt4 toolkit.
 
 %package sdl
 Summary: SDL Gambatte front-end
-Group: Applications/Emulators
 
 %description sdl
 Gambatte is an accuracy-focused, open-source, cross-platform
@@ -163,18 +159,18 @@ convert %{SOURCE2} -resize x64 %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/
 
 
 %post qt
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %postun qt
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
+
+%posttrans qt
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files -n libgambatte
@@ -201,6 +197,14 @@ fi
 
 
 %changelog
+* Mon Sep 29 2014 Andrea Musuruane <musuruan@gmail.com> - 571-1
+- Updated to upstream r571
+- Dropped obsolete Group tags
+- Updated icon cache scriptlets
+
+* Thu Sep 11 2014 Sérgio Basto <sergio@serjux.com> - 550-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Fri Dec 20 2013 Andrea Musuruane <musuruan@gmail.com> - 550-1
 - Updated to upstream r550
 - Dropped cleaning at the beginning of %%install
