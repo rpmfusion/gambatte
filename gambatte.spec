@@ -4,15 +4,17 @@
 
 Name: gambatte
 Version: 571
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 License: GPLv2
 URL: http://sourceforge.net/projects/gambatte/
 Source0: http://downloads.sourceforge.net/%{name}/%{name}_src-r%{version}.tar.gz
 Source1: gambatte-qt.desktop
-# Icon made by Peter Verschoor
+# Icon made by Peter Verschoor <peterverschoor@xs4all.nl>
 Source2: gameboy_icon.png
+# Man page made by Anthony J. Bentley <anthony@cathet.us> for OpenBSD
+Source3: gambatte_sdl.6
 # Andrea Musuruane
 # Use system minizip
 Patch0: %{name}-537-minizip.patch
@@ -141,13 +143,17 @@ install -d -m 755 %{buildroot}%{_bindir}
 install -m 755 gambatte_sdl/gambatte_sdl %{buildroot}%{_bindir}
 install -m 755 gambatte_qt/bin/gambatte_qt %{buildroot}%{_bindir}
 
-# install desktop file
+# Install manpage
+mkdir -p %{buildroot}%{_mandir}/man6/
+install -p -m 0644 %{SOURCE3} %{buildroot}%{_mandir}/man6/
+
+# Install desktop file
 mkdir -p %{buildroot}%{_datadir}/applications
-desktop-file-install --vendor '' \
+desktop-file-install \
   --dir %{buildroot}%{_datadir}/applications \
   %{SOURCE1}
 
-# install icons
+# Install icons
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps
 convert %{SOURCE2} -resize x32 %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/gambatte-qt.png
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
@@ -185,6 +191,7 @@ fi
 
 %files sdl
 %{_bindir}/gambatte_sdl
+%{_mandir}/man6/gambatte_sdl.6*
 %doc changelog COPYING README
 
 
@@ -197,6 +204,10 @@ fi
 
 
 %changelog
+* Thu Nov 20 2014 Andrea Musuruane <musuruan@gmail.com> - 571-2
+- Added manpage by Anthony J. Bentley
+- Minor cleanup
+
 * Mon Sep 29 2014 Andrea Musuruane <musuruan@gmail.com> - 571-1
 - Updated to upstream r571
 - Dropped obsolete Group tags
