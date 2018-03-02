@@ -4,7 +4,7 @@
 
 Name: gambatte
 Version: 571
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 License: GPLv2
@@ -19,6 +19,7 @@ Source3: gambatte_sdl.6
 # Use system minizip
 Patch0: %{name}-537-minizip.patch
 
+BuildRequires: gcc-c++
 BuildRequires: scons
 BuildRequires: minizip-devel
 BuildRequires: SDL-devel
@@ -93,7 +94,7 @@ do
     mv tmp $txtfile
 done
 
-# Fix premissions
+# Fix permissions
 find . \( -name *.cpp -o -name *.h \) -exec chmod 644 {} \;
 
 # Use RPM_OPT_FLAGS
@@ -125,7 +126,7 @@ popd
 
 pushd gambatte_qt
 qmake-qt4 
-make %{?_smp_mflags}
+%make_build
 popd
 
 
@@ -160,39 +161,26 @@ mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
 convert %{SOURCE2} -resize x64 %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/gambatte-qt.png
 
 
-%post -n libgambatte -p /sbin/ldconfig
-%postun -n libgambatte -p /sbin/ldconfig
-
-
-%post qt
-/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-
-
-%postun qt
-if [ $1 -eq 0 ] ; then
-    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
-
-%posttrans qt
-/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+%ldconfig_scriptlets -n libgambatte
 
 
 %files -n libgambatte
 %{_libdir}/%{soname}
-%doc changelog COPYING README
+%doc changelog README
+%license COPYING
 
 
 %files -n libgambatte-devel
 %{_includedir}/%{name}
-%doc changelog COPYING README
+%doc changelog README
+%license COPYING
 
 
 %files sdl
 %{_bindir}/gambatte_sdl
 %{_mandir}/man6/gambatte_sdl.6*
-%doc changelog COPYING README
+%doc changelog README
+%license COPYING
 
 
 %files qt
@@ -200,10 +188,19 @@ fi
 %{_datadir}/icons/hicolor/32x32/apps/gambatte-qt.png
 %{_datadir}/icons/hicolor/64x64/apps/gambatte-qt.png
 %{_datadir}/applications/gambatte-qt.desktop
-%doc changelog COPYING README
+%doc changelog README
+%license COPYING
 
 
 %changelog
+* Fri Mar 02 2018 Andrea Musuruane <musuruan@gmail.com> - 571-7
+- Added gcc-c++ dependency
+- Used %%ldconfig_scriptlets
+- Removed obsolete scriptlets
+- Added license tag
+- Spec file clean up
+
+
 * Thu Mar 01 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 571-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
