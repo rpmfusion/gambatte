@@ -21,7 +21,7 @@ Patch0: %{name}-537-minizip.patch
 
 BuildRequires: gcc-c++
 BuildRequires: scons
-BuildRequires: minizip-devel
+BuildRequires: minizip-compat-devel
 BuildRequires: SDL-devel
 BuildRequires: qt4-devel
 BuildRequires: libXv-devel
