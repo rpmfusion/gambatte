@@ -21,7 +21,11 @@ Patch0: %{name}-537-minizip.patch
 
 BuildRequires: gcc-c++
 BuildRequires: scons
+%if 0%{?fedora} >= 30
 BuildRequires: minizip-compat-devel
+%else
+BuildRequires: minizip-devel
+%endif
 BuildRequires: SDL-devel
 BuildRequires: qt4-devel
 BuildRequires: libXv-devel
