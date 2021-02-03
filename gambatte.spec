@@ -4,7 +4,7 @@
 
 Name: gambatte
 Version: 571
-Release: 13%{?dist}
+Release: 14%{?dist}
 Summary: An accuracy-focused Game Boy / Game Boy Color emulator 
 
 License: GPLv2
@@ -197,6 +197,9 @@ convert %{SOURCE2} -resize x64 %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/
 
 
 %changelog
+* Wed Feb 03 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 571-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Mon Aug 17 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 571-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
