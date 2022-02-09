@@ -21,6 +21,7 @@ Patch0: %{name}-537-minizip.patch
 
 BuildRequires: gcc-c++
 BuildRequires: scons
+BuildRequires: alsa-lib-devel
 %if 0%{?fedora} >= 30
 BuildRequires: minizip-compat-devel
 %else
