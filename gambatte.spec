@@ -89,7 +89,7 @@ This is a simple command-line SDL front-end.
 
 %prep
 %setup -q -n %{name}_src-r%{version}
-%patch0 -p1
+%patch -P0 -p1
 
 # Fix file encoding
 for txtfile in README
