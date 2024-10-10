@@ -15,12 +15,13 @@ diff -durN gambatte_src-r537.orig/libgambatte/SConstruct gambatte_src-r537/libga
 diff -durN gambatte_src-r537.orig/libgambatte/src/file/file_zip.cpp gambatte_src-r537/libgambatte/src/file/file_zip.cpp
 --- gambatte_src-r537.orig/libgambatte/src/file/file_zip.cpp	2013-06-01 16:43:58.000000000 +0200
 +++ gambatte_src-r537/libgambatte/src/file/file_zip.cpp	2013-07-01 14:39:57.325515266 +0200
-@@ -24,7 +24,7 @@
+@@ -24,7 +24,8 @@
  #include <cstring>
  
  namespace zlib {
 -#include "unzip/unzip.h"
 +#include <minizip/unzip.h>
++#include <zlib.h>
  }
  
  namespace {
